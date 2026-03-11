@@ -1,0 +1,209 @@
+# !pip install datasets
+!pip install transformers
+!pip install torch
+
+import pandas as pd
+import numpy as np
+
+from datasets import Dataset
+from transformers import (
+    T5Tokenizer,
+    T5ForConditionalGeneration,
+    TrainingArguments,
+    Trainer,
+    AutoTokenizer,
+    AutoModelForSequenceClassification
+)
+
+from sklearn.metrics import f1_score
+
+train_path = "training_data/NLI/train.csv"
+dev_path = "training_data/NLI/dev.csv"
+
+train_df = pd.read_csv(train_path)
+dev_df = pd.read_csv(dev_path)
+
+train_dataset = Dataset.from_pandas(train_df)
+dev_dataset = Dataset.from_pandas(dev_df)
+
+generator_model_name = "t5-base"
+
+tokenizer = T5Tokenizer.from_pretrained(generator_model_name)
+
+generator = T5ForConditionalGeneration.from_pretrained(generator_model_name)
+
+
+MAX_LEN = 256
+
+def preprocess_generation(example):
+
+    input_text = f"generate hypothesis: premise: {example['premise']} label: {example['label']}"
+
+    target_text = example["hypothesis"]
+
+    inputs = tokenizer(
+        input_text,
+        truncation=True,
+        padding="max_length",
+        max_length=MAX_LEN
+    )
+
+    targets = tokenizer(
+        target_text,
+        truncation=True,
+        padding="max_length",
+        max_length=MAX_LEN
+    )
+
+    inputs["labels"] = targets["input_ids"]
+
+    return inputs
+
+
+train_gen = train_dataset.map(preprocess_generation)
+dev_gen = dev_dataset.map(preprocess_generation)
+
+train_gen.set_format(type="torch")
+dev_gen.set_format(type="torch")
+
+
+gen_training_args = TrainingArguments(
+
+    output_dir="t5_generator",
+
+    learning_rate=3e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+
+    num_train_epochs=3,
+
+    eval_strategy="epoch",
+    save_strategy="epoch",
+
+    logging_dir="logs_gen",
+    report_to="none"
+)
+
+
+gen_trainer = Trainer(
+    model=generator,
+    args=gen_training_args,
+    train_dataset=train_gen,
+    eval_dataset=dev_gen
+)
+
+gen_trainer.train()
+
+
+def generate_synthetic_examples(dataset, n_samples=5000):
+
+    synthetic_data = []
+
+    for example in dataset.select(range(n_samples)):
+
+        prompt = f"generate hypothesis: premise: {example['premise']} label: {example['label']}"
+
+        inputs = tokenizer(prompt, return_tensors="pt")
+
+        outputs = generator.generate(
+            **inputs,
+            max_length=64,
+            num_beams=5
+        )
+
+        generated_hyp = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+        synthetic_data.append({
+            "premise": example["premise"],
+            "hypothesis": generated_hyp,
+            "label": example["label"]
+        })
+
+    return pd.DataFrame(synthetic_data)
+
+
+synthetic_df = generate_synthetic_examples(train_dataset, 5000)
+
+augmented_train_df = pd.concat([train_df, synthetic_df])
+
+augmented_dataset = Dataset.from_pandas(augmented_train_df)
+
+
+classifier_model_name = "microsoft/deberta-v3-large"
+
+classifier_tokenizer = AutoTokenizer.from_pretrained(classifier_model_name)
+
+
+def tokenize_classifier(example):
+
+    return classifier_tokenizer(
+        example["premise"],
+        example["hypothesis"],
+        truncation=True,
+        padding="max_length",
+        max_length=256
+    )
+
+
+train_cls = augmented_dataset.map(tokenize_classifier, batched=True)
+dev_cls = dev_dataset.map(tokenize_classifier, batched=True)
+
+train_cls.set_format(type="torch",
+                     columns=["input_ids","attention_mask","label"])
+
+dev_cls.set_format(type="torch",
+                   columns=["input_ids","attention_mask","label"])
+
+
+classifier = AutoModelForSequenceClassification.from_pretrained(
+    classifier_model_name,
+    num_labels=2
+)
+
+
+cls_training_args = TrainingArguments(
+
+    output_dir="nli_classifier",
+
+    learning_rate=2e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+
+    num_train_epochs=4,
+
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+
+    logging_dir="logs_cls",
+    report_to="none"
+)
+
+
+def compute_metrics(eval_pred):
+
+    logits, labels = eval_pred
+    preds = np.argmax(logits, axis=1)
+
+    macro_f1 = f1_score(labels, preds, average="macro")
+
+    return {"macro_f1": macro_f1}
+
+
+
+cls_trainer = Trainer(
+
+    model=classifier,
+    args=cls_training_args,
+
+    train_dataset=train_cls,
+    eval_dataset=dev_cls,
+
+    compute_metrics=compute_metrics
+)
+
+
+cls_trainer.train()
+
+results = cls_trainer.evaluate()
+
+print(results)
