@@ -1,0 +1,191 @@
+# !pip install datasets
+!pip install transformers
+!pip install torch
+
+import pandas as pd
+import numpy as np
+import torch
+
+from datasets import Dataset
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer
+)
+
+from sklearn.metrics import f1_score, accuracy_score
+
+train_path = "training_data/train.csv"
+dev_path = "training_data//dev.csv"
+
+train_df = pd.read_csv(train_path)
+dev_df = pd.read_csv(dev_path)
+
+train_dataset = Dataset.from_pandas(train_df)
+dev_dataset = Dataset.from_pandas(dev_df)
+
+deberta_name = "microsoft/deberta-v3-large"
+modernbert_name = "answerdotai/ModernBERT-base"
+
+
+deberta_tokenizer = AutoTokenizer.from_pretrained(deberta_name)
+modern_tokenizer = AutoTokenizer.from_pretrained(modernbert_name)
+
+MAX_LEN = 256
+
+def tokenize_deberta(example):
+    return deberta_tokenizer(
+        example["premise"],
+        example["hypothesis"],
+        truncation=True,
+        padding="max_length",
+        max_length=MAX_LEN
+    )
+
+
+def tokenize_modern(example):
+    return modern_tokenizer(
+        example["premise"],
+        example["hypothesis"],
+        truncation=True,
+        padding="max_length",
+        max_length=MAX_LEN
+    )
+
+
+
+train_deberta = train_dataset.map(tokenize_deberta, batched=True)
+dev_deberta = dev_dataset.map(tokenize_deberta, batched=True)
+
+train_modern = train_dataset.map(tokenize_modern, batched=True)
+dev_modern = dev_dataset.map(tokenize_modern, batched=True)
+
+train_deberta.set_format(type="torch",
+                         columns=["input_ids", "attention_mask", "label"])
+
+dev_deberta.set_format(type="torch",
+                       columns=["input_ids", "attention_mask", "label"])
+
+train_modern.set_format(type="torch",
+                        columns=["input_ids", "attention_mask", "label"])
+
+dev_modern.set_format(type="torch",
+                      columns=["input_ids", "attention_mask", "label"])
+
+def compute_metrics(eval_pred):
+
+    logits, labels = eval_pred
+    preds = np.argmax(logits, axis=1)
+
+    macro_f1 = f1_score(labels, preds, average="macro")
+    acc = accuracy_score(labels, preds)
+
+    return {
+        "accuracy": acc,
+        "macro_f1": macro_f1
+    }
+
+
+training_args_deberta = TrainingArguments(
+
+    output_dir="deberta_results",
+
+    learning_rate=2e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+
+    num_train_epochs=4,
+    weight_decay=0.01,
+
+    eval_strategy="epoch",
+    save_strategy="epoch",
+
+    load_best_model_at_end=True,
+    metric_for_best_model="macro_f1",
+
+    logging_dir="logs_deberta",
+
+    report_to="none"
+)
+
+training_args_modern = TrainingArguments(
+
+    output_dir="modernbert_results",
+
+    learning_rate=2e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+
+    num_train_epochs=4,
+    weight_decay=0.01,
+
+    eval_strategy="epoch",
+    save_strategy="epoch",
+
+    load_best_model_at_end=True,
+    metric_for_best_model="macro_f1",
+
+    logging_dir="logs_modern",
+
+    report_to="none"
+)
+
+deberta_model = AutoModelForSequenceClassification.from_pretrained(
+    deberta_name,
+    num_labels=2
+)
+
+modern_model = AutoModelForSequenceClassification.from_pretrained(
+    modernbert_name,
+    num_labels=2
+)
+
+trainer_deberta = Trainer(
+
+    model=deberta_model,
+    args=training_args_deberta,
+
+    train_dataset=train_deberta,
+    eval_dataset=dev_deberta,
+
+    compute_metrics=compute_metrics
+)
+
+trainer_modern = Trainer(
+
+    model=modern_model,
+    args=training_args_modern,
+
+    train_dataset=train_modern,
+    eval_dataset=dev_modern,
+
+    compute_metrics=compute_metrics
+)
+
+trainer_deberta.train()
+
+trainer_modern.train()
+
+
+deberta_results = trainer_deberta.evaluate()
+
+modern_results = trainer_modern.evaluate()
+
+
+pred_deberta = trainer_deberta.predict(dev_deberta)
+pred_modern = trainer_modern.predict(dev_modern)
+
+logits_deberta = pred_deberta.predictions
+logits_modern = pred_modern.predictions
+
+# Average logits
+final_logits = (logits_deberta + logits_modern) / 2
+
+final_preds = np.argmax(final_logits, axis=1)
+
+macro_f1 = f1_score(dev_df["label"], final_preds, average="macro")
+accuracy = accuracy_score(dev_df["label"], final_preds)
+
+print("Accuracy:", accuracy)
+print("Macro F1:", macro_f1)
