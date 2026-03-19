@@ -159,13 +159,8 @@ Additional reporting inspiration:
 
 ### Code attribution
 
-Replace this section with the exact truth for your submission.
-
-Example wording if relevant:
-
-- The final implementation was written for this coursework.
-- Pretrained embeddings were loaded using Gensim utilities.
-- If any utility code, notebook structure, or snippets were adapted from external sources, those sources must be acknowledged here explicitly.
+Inspired from: https://github.com/dunesand/Text-Matching-based-on-ESIM-model/blob/master/esim_model.py
+the implementation of Chen et al. (2017), *Enhanced LSTM for Natural Language Inference (ESIM)
 
 **Important:** any reused code bases or snippets should be declared here to comply with the coursework requirements.
 
