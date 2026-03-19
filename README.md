@@ -163,7 +163,7 @@ Inspired from: https://github.com/dunesand/Text-Matching-based-on-ESIM-model/blo
 the implementation of Chen et al. (2017), *Enhanced LSTM for Natural Language Inference (ESIM)
 
 **Important:** any reused code bases or snippets should be declared here to comply with the coursework requirements.
-
+n/a
 ---
 
 ## Trained model storage (OneDrive)
