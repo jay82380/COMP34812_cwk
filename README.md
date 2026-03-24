@@ -1,183 +1,165 @@
-# README — Solution B (Non-Transformer NLI: ESIM-style model)
+# Model Card for `nli-esim-plus-category-b`
 
-## Overview
+This model is a non-transformer natural language inference classifier developed for the `COMP34812` shared task (`AY 2025–26`), Track A: Natural Language Inference. It is based on an ESIM-style BiLSTM architecture with soft alignment, local inference matching, a second BiLSTM composition layer, gated pooling, and sentence-level interaction features. In the strongest final run, R-Drop regularization and SWA-style model averaging were enabled.
 
-This folder contains our **Category B** solution for the COMP34812 Natural Language Understanding shared task, Track A: **Natural Language Inference (NLI)**.
+## Model Details
 
-Our solution is a **non-transformer deep learning model** based on an **ESIM-style BiLSTM architecture**. The implementation uses:
+### Model Description
 
-- pretrained static word embeddings (GloVe via Gensim),
-- BiLSTM sequence encoding,
-- soft cross-sentence alignment,
-- local inference matching,
-- a second BiLSTM composition layer,
-- pooled classification,
-- and extensions such as gated pooling / sentence-level interaction features
+This model predicts whether a `hypothesis` is supported by a `premise` in a binary NLI setup.
 
-The notebooks are structured so that **training**, **development-set evaluation**, and **demo/inference** are separated.
+- **Developed by:** `Mateusz Wojcieszyk`
+- **Language(s):** `English`
+- **Model type:** `Supervised binary text-pair classifier`
+- **Model architecture:** `ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features`
+- **Finetuned from model [optional]:** `Not applicable` (`trained from scratch on coursework dataset; static pretrained embeddings used for initialization`)
 
----
+### Model Resources
 
-## File structure
+- **Repository / storage:** `https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg`
+- **Training notebook:** `train_nli_B_model.ipynb`
+- **Development evaluation notebook:** `evaluate_nli_B_dev.ipynb`
+- **Demo / inference notebook:** `demo_nli_B_predict.ipynb`
 
-- `train_nli_B_model.ipynb`
-- `evaluate_nli_B_dev.ipynb`
-- `demo_nli_B_predict.ipynb`
-- `model_card_nli_esim.md`
+### References
 
-## TO DO
+- `Chen, Q., Zhu, X., Ling, Z., Inkpen, D., and Wei, S. (2017). Enhanced LSTM for Natural Language Inference.`
+- `Liang, X., Wu, L., Li, J., Wang, L., and Long, M. (2021). R-Drop: Regularized Dropout for Neural Networks.`
+- `Talman, A., Yli-Jyrä, A., and Tiedemann, J. (2023). Uncertainty-Aware Natural Language Inference with Stochastic Weight Averaging.`  
+  In this coursework submission, this paper is used as motivation for a simplified `SWA-style` averaging procedure rather than a full reproduction of the method.
+- `Mitchell, M. et al. (2019). Model Cards for Model Reporting.`
 
-- `README.md`
-- `Group_n_B.csv` (predictions on the hidden test set)  ## TO DO
+## Training Details
 
-Link to trained model:
+### Training Data
+
+Training used only the coursework-provided `train.csv` split for the NLI track. Development evaluation used only the coursework-provided `dev.csv` split. No additional labelled or unlabelled task datasets were used.
+
+Pretrained static word embeddings were used in line with the coursework clarification that pretrained representations are allowed, provided no external corpora are used for task-specific training.
+
+- **Training examples:** `24,432`
+- **Development examples:** `6,736`
+- **Training label distribution:** `1: 12,648`, `0: 11,784`
+- **Development label distribution:** `1: 3,478`, `0: 3,258`
+
+Pretrained static embeddings (`glove-wiki-gigaword-100` via `Gensim`) were used as initialization only.
+
+### Training Procedure
+
+The model is trained with `BCEWithLogitsLoss` and `AdamW`. Development `macro-F1` is used for early stopping and best-checkpoint selection.
+
+Optional regularization / training enhancements used in the strongest run:
+
+- **R-Drop** (`consistency regularization from two dropout forward passes`)
+- **SWA-style averaging** in later epochs
+
+#### Training Hyperparameters
+
+- `seed`: `42`
+- `max_len`: `128`
+- `min_freq`: `2`
+- `max_vocab_size`: `50,000`
+- `embedding_backend`: `gensim`
+- `embedding_name`: `glove-wiki-gigaword-100`
+- `embedding_dim`: `100`
+- `train_embeddings`: `true`
+- `hidden_size`: `192`
+- `dropout`: `0.3`
+- `batch_size`: `64`
+- `learning_rate`: `3e-4`
+- `weight_decay`: `1e-5`
+- `epochs`: `12`
+- `early_stopping_patience`: `4`
+- `gradient_clip`: `5.0`
+- `use_rdrop`: `true`
+- `rdrop_alpha`: `0.5`
+- `use_swa`: `true`
+- `swa_start_epoch`: `8`
+- `swa_lr`: `1e-4`
+
+#### Speeds, Sizes, Times
+
+- **Runtime device:** `CUDA GPU` when available
+- **Best epoch in final run:** `12`
+- **Tuned decision threshold:** `0.50`
+- **Saved artifact:** single PyTorch bundle (`nli_esim_plus_bundle.pt`) containing weights, vocab, config, and threshold metadata
+
+## Evaluation
+
+### Testing Data & Metrics
+
+#### Testing Data
+
+For reported labelled evaluation, the coursework `dev.csv` split is used.
+
+#### Metrics
+
+The following metrics were tracked:
+
+- `Accuracy`
+- `Macro precision`
+- `Macro recall`
+- `Macro F1`
+- `Matthews correlation coefficient (MCC)`
+- `ROC-AUC`
+- `Binary cross-entropy loss`
+
+### Results
+
+Development-set results (`best checkpoint`):
+
+- `Accuracy`: `0.7393`
+- `Macro precision`: `0.7393`
+- `Macro recall`: `0.7396`
+- `Macro F1`: `0.7392`
+- `MCC`: `0.4789`
+- `ROC-AUC`: `0.8162`
+- `Loss`: `0.5338`
+
+Class-wise dev performance:
+
+- `Label 0` — `Precision: 0.7228`, `Recall: 0.7477`, `F1: 0.7351`
+- `Label 1` — `Precision: 0.7558`, `Recall: 0.7315`, `F1: 0.7434`
+
+Confusion matrix (`dev`):
+
+- `True negatives`: `2436`
+- `False positives`: `822`
+- `False negatives`: `934`
+- `True positives`: `2544`
+
+## Technical Specifications
+
+### Hardware
+
+Training and evaluation were run on a `CUDA-enabled GPU` in `Google Colab`.
+
+### Software
+
+- `Python 3`
+- `PyTorch`
+- `pandas`
+- `numpy`
+- `scikit-learn`
+- `matplotlib`
+- `tqdm`
+- `gensim`
+
+## Bias, Risks, and Limitations
+
+- This model was trained only on the coursework dataset, so performance may not generalise to other domains or genres.
+- The shared task was run in `closed mode`, so no external labelled NLI or claim-verification datasets were used.
+- Static pretrained embeddings may encode biases from their source corpora.
+- Although the model uses attention-based alignment, it remains a non-transformer recurrent architecture and may struggle with long-range dependencies or examples requiring substantial background knowledge.
+- Threshold tuning was performed on the development set and may not transfer perfectly to the hidden test set.
+- This model is intended for coursework evaluation rather than real-world deployment.
+
+## Additional Information
+
+Separate notebooks are provided for training, development-set evaluation, and demo inference. The trained model bundle is loaded by the evaluation and demo notebooks.
+
+If the trained model is stored on the cloud, it can be found here:
 
 `https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg`
 
----
-
-## What each notebook does
-
-### 1. `train_nli_B_model.ipyn`
-
-This notebook:
-
-- loads the coursework `train.csv` (and, if applicable in the notebook, uses `dev.csv` internally for checkpoint selection / threshold tuning),
-- preprocesses the data,
-- builds the vocabulary,
-- loads pretrained embeddings,
-- defines and trains the ESIM-style model,
-- saves the trained model bundle for later reuse.
-
-Expected output:
-
-- `nli_esim_plus_bundle.pt` (or the equivalent saved model bundle used by the notebook)
-
-### 2. `evaluate_dev_nli_esim.ipynb`
-
-This notebook:
-
-- loads the saved model bundle,
-- loads `dev.csv`,
-- rebuilds the model from the saved bundle/configuration,
-- evaluates the model on the development set,
-- reports metrics such as accuracy, macro-F1, MCC, ROC-AUC,
-- may also generate plots, a confusion matrix, and baseline comparison outputs if enabled.
-
-### 3. `predict_nli_esim.ipynb`
-
-This notebook is the **demo/inference notebook** required by the coursework. It:
-
-- loads the saved model bundle,
-- takes an input CSV file containing the NLI instances,
-- runs the model in inference mode,
-- writes predictions to a CSV file with a single column called `prediction`.
-
----
-
-## How to run the notebooks
-
-These notebooks were designed to be runnable in **Google Colab** or a local Jupyter environment with Python 3 and the required packages installed.
-
-### Step 1: Train the model
-
-Run:
-
-- `train_nli_B_model.ipynb`
-
-This produces the saved model bundle (for example `nli_esim_plus_bundle.pt`).
-
-### Step 2: Evaluate on the development set
-
-Run:
-
-- `evaluate_nli_B_dev.ipynb`
-
-Required inputs:
-
-- the saved model bundle from step 1
-- `dev.csv`
-
-### Step 3: Generate predictions for the test set
-
-Run:
-
-- `demo_nli_B_predict.ipynb`
-
-Required inputs:
-
-- the saved model bundle from step 1
-- the provided hidden test CSV
-
-Required output format:
-
-- a CSV with exactly one column named `prediction`
-
-Final prediction filename for this solution:
-
-- `Group_n_B.csv` ## TO DO
-
-Replace `n` with the actual group number from Canvas. ## TO DO
-
----
-
-## Data sources used
-
-This system was developed for the COMP34812 shared task in **closed mode**.
-
-### Coursework data
-
-Only the coursework-provided data were used for model development and evaluation:
-
-- `train.csv`
-- `dev.csv`
-- hidden test CSV (for final prediction generation only)
-
-### Pretrained representations
-
-In line with the coursework clarification, we used **pretrained word embeddings**:
-
-- GloVe embeddings loaded via Gensim (for example `glove-wiki-gigaword-100` or `glove-wiki-gigaword-300`, depending on the final run)
-
-No additional labelled or unlabelled task datasets were used.
-
----
-
-## Attribution and reused resources
-
-### Research inspiration
-
-The main architectural inspiration for this solution is:
-
-- Chen et al. (2017), *Enhanced LSTM for Natural Language Inference (ESIM)*
-
-Additional reporting inspiration:
-
-- Mitchell et al. (2019), *Model Cards for Model Reporting*
-- Liang et al. (2021), *R-Drop: Regularized Dropout for Neural Networks* — this is the paper for the “two dropout forward passes + consistency regularization” idea.
-- Talman et al. (2023) — motivation for applying stochastic weight averaging in NLI; our system uses a simplified SWA-style checkpoint averaging approach.
-
-### Code attribution
-
-Inspired from: https://github.com/dunesand/Text-Matching-based-on-ESIM-model/blob/master/esim_model.py
-the implementation of Chen et al. (2017), *Enhanced LSTM for Natural Language Inference (ESIM)
-
-**Important:** any reused code bases or snippets should be declared here to comply with the coursework requirements.
-n/a
----
-
-## Trained model storage (OneDrive)
-
-**OneDrive link to trained model bundle:**  
-`https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg`
-
-Recommended file stored on OneDrive:
-
-- `nli_esim_plus_bundle.pt`
-
----
-
-## Use of Generative AI Tools
-
-- Generative AI tools were used for limited assistance with drafting documentation, debugging, and code explanation.
-- All final implementation decisions, testing, and submission preparation were reviewed and edited by us the team #TO DO
+Any use of generative AI tools should be declared in the `README` in line with the coursework specification.
