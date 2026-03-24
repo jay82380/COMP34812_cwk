@@ -6,17 +6,17 @@ This model is a non-transformer natural language inference classifier developed 
 
 ### Model Description
 
-The model predicts whether a hypothesis is supported by a premise in the binary NLI setting used in the coursework.
+This model predicts whether a **hypothesis** is supported by a **premise** in a binary NLI setup.
 
-- **Developed by:** [Add full student names here]
+- **Developed by:** Mateusz Wojcieszyk
 - **Language(s):** English
-- **Model type:** Supervised binary classifier for pairwise sequence classification
-- **Model architecture:** ESIM-style BiLSTM with soft alignment, local inference matching, a second BiLSTM composition layer, learned gated pooling, and sentence-level interaction features
-- **Finetuned from model [optional]:** Not applicable. The model was trained on the coursework dataset only, with pretrained static word embeddings used for initialization.
+- **Model type:** Supervised binary text-pair classifier
+- **Model architecture:** ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features
+- **Finetuned from model [optional]:** Not applicable (trained from scratch on coursework dataset; static pretrained embeddings used for initialization)
 
 ### Model Resources
 
-- **Repository / storage:** [Add OneDrive link or submission location here]
+- **Repository / storage:** [(https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg)]
 - **Training notebook:** `train_nli_B_model.ipynb`
 - **Development evaluation notebook:** `evaluate_nli_B_dev.ipynb`
 - **Demo / inference notebook:** `demo_nli_B_predict.ipynb`
@@ -42,46 +42,48 @@ Pretrained static word embeddings were used in line with the coursework clarific
 - **Training label distribution:** `1: 12,648`, `0: 11,784`
 - **Development label distribution:** `1: 3,478`, `0: 3,258`
 
-Text was lowercased, tokenised with a lightweight regex tokenizer that keeps punctuation as separate tokens, truncated to a maximum length of 128 tokens per sequence, and converted to token IDs using a vocabulary built from the coursework training data only.
+Pretrained static embeddings (`glove-wiki-gigaword-100` via Gensim) were used as initialization only.
 
 ### Training Procedure
 
-The model was trained with `BCEWithLogitsLoss` using AdamW optimization. Development performance was monitored during training, and checkpoint selection was based on development macro-F1 after threshold tuning on the development set.
+The model is trained with `BCEWithLogitsLoss` and AdamW. Development macro-F1 is used for early stopping and best-checkpoint selection.
 
-The final run also enabled two lightweight training-side improvements:
+Optional regularization/training enhancements used in the strongest run:
 
-- **R-Drop regularization:** implemented as two dropout-enabled forward passes with an added consistency regularization term.
-- **SWA-style model averaging:** implemented as stochastic weight averaging over later training epochs.
+- **R-Drop** (consistency regularization from two dropout forward passes)
+- **SWA-style averaging** in later epochs
 
 #### Training Hyperparameters
 
-- **Random seed:** 42
-- **Maximum sequence length:** 128
-- **Minimum vocabulary frequency:** 2
-- **Maximum vocabulary size:** 50,000
-- **Embedding backend:** Gensim
-- **Pretrained embedding source:** `glove-wiki-gigaword-100`
-- **Embedding dimension:** 100
-- **Train embeddings:** True
-- **Hidden size:** 192
-- **Dropout:** 0.3
-- **Batch size:** 64
-- **Learning rate:** 3e-4
-- **Weight decay:** 1e-5
-- **Requested epochs:** 12
-- **Early stopping patience:** 4
-- **Gradient clipping:** 5.0
-- **R-Drop enabled:** True
-- **R-Drop alpha:** 0.5
-- **SWA enabled:** True
-- **SWA start epoch:** 8
-- **SWA learning rate:** 1e-4
+- seed: 42
+- max_len: 128
+- min_freq: 2
+- max_vocab_size: 50,000
+- embedding_backend: gensim
+- embedding_name: glove-wiki-gigaword-100
+- embedding_dim: 100
+- train_embeddings: true
+- hidden_size: 192
+- dropout: 0.3
+- batch_size: 64
+- learning_rate: 3e-4
+- weight_decay: 1e-5
+- epochs: 12
+- early_stopping_patience: 4
+- gradient_clip: 5.0
+- use_rdrop: true
+- rdrop_alpha: 0.5
+- use_swa: true
+- swa_start_epoch: 8
+- swa_lr: 1e-4
+
 
 #### Speeds, Sizes, Times
 
-- **Device used:** CUDA-enabled GPU (from notebook config)
-- **Best epoch:** 12
-- **Best threshold:** 0.50
+- Runtime device: CUDA GPU when available
+- Best epoch in final run: 12
+- Tuned decision threshold: 0.50
+- Saved artifact: single PyTorch bundle (`nli_esim_plus_bundle.pt`) containing weights + vocab + config + threshold metadata
 
 ## Evaluation
 
@@ -89,50 +91,44 @@ The final run also enabled two lightweight training-side improvements:
 
 #### Testing Data
 
-Evaluation on labelled data was carried out using the coursework-provided development set only.
+For reported labelled evaluation, the coursework `dev.csv` split is used.
 
 #### Metrics
 
 The following metrics were tracked:
 
 - Accuracy
-- Macro-precision
-- Macro-recall
-- Macro-F1
+- Macro precision
+- Macro recall
+- Macro F1
 - Matthews correlation coefficient (MCC)
 - ROC-AUC
 - Binary cross-entropy loss
 
 ### Results
 
-Development results for the best checkpoint:
+Development-set results (best checkpoint):
 
-- **Accuracy:** 0.7393
-- **Macro-precision:** 0.7393
-- **Macro-recall:** 0.7396
-- **Macro-F1:** 0.7392
-- **MCC:** 0.4789
-- **ROC-AUC:** 0.8162
-- **Loss:** 0.5338
+- Accuracy: 0.7393
+- Macro precision: 0.7393
+- Macro recall: 0.7396
+- Macro F1: 0.7392
+- MCC: 0.4789
+- ROC-AUC: 0.8162
+- Loss: 0.5338
 
-Class-wise development performance:
+Class-wise dev performance:
 
-- **Label 0**
-  - Precision: 0.7228
-  - Recall: 0.7477
-  - F1: 0.7351
+- Label 0 — Precision: 0.7228, Recall: 0.7477, F1: 0.7351
+- Label 1 — Precision: 0.7558, Recall: 0.7315, F1: 0.7434
 
-- **Label 1**
-  - Precision: 0.7558
-  - Recall: 0.7315
-  - F1: 0.7434
 
-Confusion matrix on the development set:
+Confusion matrix (dev):
 
-- **True negatives:** 2436
-- **False positives:** 822
-- **False negatives:** 934
-- **True positives:** 2544
+- True negatives: 2436
+- False positives: 822
+- False negatives: 934
+- True positives: 2544
 
 ## Technical Specifications
 
