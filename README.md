@@ -8,9 +8,9 @@ This repository contains the Category B (non-transformer) submission for Track A
 
 | File | Description |
 |------|-------------|
-| `train_nli_B_model.ipynb` | Training notebook — trains the ESIM+ model and saves the bundle |
-| `evaluate_nli_B_dev.ipynb` | Evaluation notebook — loads the saved bundle and evaluates on `dev.csv` |
-| `demo_nli_B_predict.ipynb` | Demo/inference notebook — produces predictions on an unlabelled `test.csv` |
+| `train_nli_B_model.ipynb` | Training notebook -- trains the ESIM+ model and saves the bundle |
+| `evaluate_nli_B_dev.ipynb` | Evaluation notebook -- loads the saved bundle and evaluates on `dev.csv` |
+| `demo_nli_B_predict.ipynb` | Demo/inference notebook -- produces predictions on an unlabelled `test.csv` |
 | `model_card.md` | Model card for the ESIM+ submission |
 
 ## Trained Model
