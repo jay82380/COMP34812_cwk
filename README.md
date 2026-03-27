@@ -7,7 +7,7 @@ tags:
 - bilstm
 - esim
 - non-transformer
-repo: https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg
+repo: https://github.com/jay82380/COMP34812_cwk/tree/category_b
 ---
 
 # Model Card for nli-esim-plus-category-b
@@ -28,7 +28,7 @@ This model is a non-transformer NLI classifier developed for the COMP34812 share
 
 ### Model Resources
 
-- **Repository:** https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg
+- **Repository:** https://github.com/jay82380/COMP34812_cwk/tree/category_b
 - **Paper or documentation:**  
   - Chen, Q., Zhu, X., Ling, Z., Inkpen, D., and Wei, S. (2017). *Enhanced LSTM for Natural Language Inference.*  
   - Liang, X., Wu, L., Li, J., Wang, L., and Long, M. (2021). *R-Drop: Regularized Dropout for Neural Networks.*  
@@ -41,7 +41,7 @@ This model is a non-transformer NLI classifier developed for the COMP34812 share
 
 Training used only the coursework-provided `train.csv` split for the NLI track. Development evaluation used only the coursework-provided `dev.csv` split. No additional labelled or unlabelled task datasets were used.
 
-Pretrained static word embeddings were used in line with the coursework clarification that pretrained representations are allowed, provided no external corpora are used for task-specific training.
+Pretrained static word embeddings were used.
 
 - **Training examples:** 24,432
 - **Development examples:** 6,736
@@ -178,4 +178,3 @@ The trained model is stored on the cloud here:
 
 `https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg`
 
-Any use of generative AI tools should be declared in the README in line with the coursework specification.
