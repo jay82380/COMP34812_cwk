@@ -1,3 +1,0 @@
-Backbone, Epochs_Completed, Final_Accuracy, Final_F1
-deberta, 18336, 0.8728, 0.8727
-modernbert, 24448, 0.8780, 0.8779

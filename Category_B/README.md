@@ -1,16 +1,17 @@
-# COMP34812 Shared Task — Category C: Transformer NLI
+# COMP34812 Shared Task — Category B: Non-Transformer NLI
 
-This repository contains the Category C (transformer) submission for Track A: Natural Language Inference in the COMP34812 shared task (AY 2025–26).
+This repository contains the Category B (non-transformer) submission for Track A: Natural Language Inference in the COMP34812 shared task (AY 2025–26).
 
-**Author:** Jay Parekh & Matthew Cook
+**Author:** Mateusz Wojcieszyk
 
 ## Repository Structure
 
 | File | Description |
 |------|-------------|
-| `MoE_POS_Synthetic_Ensemble_REAL.ipynb` | Training/Evaluate notebook -- trains the model on `train.csv`, evaluates it on `dev.csv` and saves it|
-| `demo_code.ipynb` | Demo/inference notebook -- produces predictions on an unlabelled `test.csv` |
-| `model_card.md` | Model card for the submission |
+| `train_nli_B_model.ipynb` | Training notebook -- trains the ESIM+ model and saves the bundle |
+| `evaluate_nli_B_dev.ipynb` | Evaluation notebook -- loads the saved bundle and evaluates on `dev.csv` |
+| `demo_nli_B_predict.ipynb` | Demo/inference notebook -- produces predictions on an unlabelled `test.csv` |
+| `model_card.md` | Model card for the ESIM+ submission |
 
 ## Trained Model
 
@@ -30,13 +31,6 @@ The bundle contains model weights, vocabulary, configuration, decision threshold
 - **ESIM architecture:** Chen, Q., Zhu, X., Ling, Z., Inkpen, D., and Wei, S. (2017). *Enhanced LSTM for Natural Language Inference.* Proceedings of ACL 2017. https://aclanthology.org/P17-1152/
 - **R-Drop regularization:** Liang, X., Wu, L., Li, J., Wang, L., and Long, M. (2021). *R-Drop: Regularized Dropout for Neural Networks.* NeurIPS 2021.
 - **SWA-style model averaging:** Talman, A., Yli-Jyrä, A., and Tiedemann, J. (2023). *Uncertainty-Aware Natural Language Inference with Stochastic Weight Averaging.*
-
-
-- **Transformer Backbones:** https://arxiv.org/abs/2006.03654 
-- **Mixture oF Experts (MoE):** https://arxiv.org/abs/1701.06538
-- **Linguistically-Informed/ POS-Specialised Models**  https://arxiv.org/abs/1804.08199  https://arxiv.org/abs/1809.05724
-- **Data Augmentation (T5):** https://arxiv.org/abs/1910.10683
-- **Ensembling:**        -  https://web.engr.oregonstate.edu/~tgd/publications/mcs-ensembles.pdf https://arxiv.org/abs/1912.02757
 - **Model card format:** Mitchell, M. et al. (2019). *Model Cards for Model Reporting.*
 - **Model card template and creation notebook:** Provided as part of the COMP34812 coursework materials.
 
@@ -44,5 +38,6 @@ The bundle contains model weights, vocabulary, configuration, decision threshold
 
 All notebooks are designed for Google Colab with a GPU runtime.
 
-1. **Train:** Upload `train.csv` and `dev.csv` under training_data/NLI/ to the Colab session, then run `MoE_POS_Synthetic_Ensemble_REAL.ipynb`. This produces `nli_esim_plus_bundle.pt`.
-3. **Predict:** Upload `test.csv` and the saved bundle, then run `demo_code.ipynb`. This outputs `Group_n_B.csv` with a single `prediction` column.
+1. **Train:** Upload `train.csv` and `dev.csv` to the Colab session, then run `train_nli_B_model.ipynb`. This produces `nli_esim_plus_bundle.pt`.
+2. **Evaluate:** Upload `dev.csv` and the saved bundle, then run `evaluate_nli_B_dev.ipynb`.
+3. **Predict:** Upload `test.csv` and the saved bundle, then run `demo_nli_B_predict.ipynb`. This outputs `Group_n_B.csv` with a single `prediction` column.
