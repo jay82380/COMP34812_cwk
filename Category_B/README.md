@@ -1,4 +1,4 @@
-# COMP34812 Shared Task — Category B: Non-Transformer NLI
+# COMP34812 Shared Task -- Category B: Non-Transformer NLI
 
 This repository contains the Category B (non-transformer) submission for Track A: Natural Language Inference in the COMP34812 shared task (AY 2025–26).
 
