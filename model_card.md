@@ -170,8 +170,11 @@ Confusion matrix on the development set:
 
 ### Hardware
     
-    - CUDA-enabled GPU in Google Colab recommended for training
-    - CPU execution is possible but slower
+The model was trained on the following hardware (not necessarily the minimum requirement for inference):
+      
+    - RAM: ≥ 8 GB
+    - Storage: ≥ 2 GB
+    - GPU: Optional (recommended for training); CUDA-enabled GPU in Google Colab was used
 
 ### Software
 
