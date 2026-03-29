@@ -107,7 +107,6 @@ The strongest run also used two lightweight training improvements:
     - runtime_device: CUDA GPU when available
     - approximate_duration_per_epoch: ~47 seconds on Google Colab GPU
     - approximate_total_training_time: ~9–10 minutes for 12 epochs
-    - best_epoch: 12
     - tuned_decision_threshold: 0.54
     - saved_artifact: single PyTorch bundle (`nli_esim_plus_bundle.pt`) containing weights, vocab, config, threshold, and training metadata
 
