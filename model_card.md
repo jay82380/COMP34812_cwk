@@ -26,12 +26,12 @@ This model performs binary Natural Language Inference (NLI), predicting whether 
 <!-- Provide a longer summary of what this model is. -->
 
 This model is a non-transformer NLI classifier developed for the COMP34812 shared task (AY 2025–26), Track A: Natural Language Inference. It is based on an ESIM-style BiLSTM architecture with soft alignment, local inference matching, a second BiLSTM composition layer, gated pooling, and sentence-level interaction features. In the strongest final run, R-Drop regularization and SWA-style model averaging were enabled.
-
-- **Developed by:** Mateusz Wojcieszyk
-- **Language(s):** English
-- **Model type:** Supervised binary text-pair classifier
-- **Model architecture:** ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features
-- **Finetuned from model [optional]:** Not applicable. The model was trained on the coursework dataset only, with pretrained static word embeddings used for initialization.
+    
+    - Developed by: Mateusz Wojcieszyk
+    - Language(s): English
+    - Model type: Supervised binary text-pair classifier
+    - Model architecture: ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features
+    - Finetuned from model: Not applicable. The model was trained on the coursework dataset only, with pretrained static word embeddings used for initialization.
 
 ### Model Resources
 
@@ -78,38 +78,38 @@ The strongest run also used two lightweight training improvements:
 
 <!-- This is a summary of the values of hyperparameters used in training the model. -->
 
-- learning_rate: 3e-4
-- batch_size: 64
-- seed: 42
-- max_sequence_length: 128
-- min_freq: 2
-- max_vocab_size: 50,000
-- embedding_backend: gensim
-- embedding_name: glove-wiki-gigaword-100
-- embedding_dim: 100
-- train_embeddings: true
-- hidden_size: 192
-- dropout: 0.3
-- weight_decay: 1e-5
-- epochs: 12
-- early_stopping_patience: 4
-- gradient_clip: 5.0
-- use_rdrop: true
-- rdrop_alpha: 0.5
-- use_swa: true
-- swa_start_epoch: 8
-- swa_lr: 1e-4
+      - learning_rate: 3e-4
+      - batch_size: 64
+      - seed: 42
+      - max_sequence_length: 128
+      - min_freq: 2
+      - max_vocab_size: 50,000
+      - embedding_backend: gensim
+      - embedding_name: glove-wiki-gigaword-100
+      - embedding_dim: 100
+      - train_embeddings: true
+      - hidden_size: 192
+      - dropout: 0.3
+      - weight_decay: 1e-5
+      - epochs: 12
+      - early_stopping_patience: 4
+      - gradient_clip: 5.0
+      - use_rdrop: true
+      - rdrop_alpha: 0.5
+      - use_swa: true
+      - swa_start_epoch: 8
+      - swa_lr: 1e-4
 
 #### Speeds, Sizes, Times
 
 <!-- This section provides information about how roughly how long it takes to train the model and the size of the resulting model. -->
 
-- runtime_device: CUDA GPU when available
-- approximate_duration_per_epoch: ~47 seconds on Google Colab GPU
-- approximate_total_training_time: ~9–10 minutes for 12 epochs
-- best_epoch: 12
-- tuned_decision_threshold: 0.54
-- saved_artifact: single PyTorch bundle (`nli_esim_plus_bundle.pt`) containing weights, vocab, config, threshold, and training metadata
+    - runtime_device: CUDA GPU when available
+    - approximate_duration_per_epoch: ~47 seconds on Google Colab GPU
+    - approximate_total_training_time: ~9–10 minutes for 12 epochs
+    - best_epoch: 12
+    - tuned_decision_threshold: 0.54
+    - saved_artifact: single PyTorch bundle (`nli_esim_plus_bundle.pt`) containing weights, vocab, config, threshold, and training metadata
 
 ## Evaluation
 
@@ -127,62 +127,62 @@ For reported labelled evaluation, the coursework `dev.csv` split was used.
 
 <!-- These are the evaluation metrics being used. -->
 
-- Accuracy
-- Macro precision
-- Macro recall
-- Macro F1
-- Matthews correlation coefficient (MCC)
-- ROC-AUC
-- Binary cross-entropy loss
+    - Accuracy
+    - Macro precision
+    - Macro recall
+    - Macro F1
+    - Matthews correlation coefficient (MCC)
+    - ROC-AUC
+    - Binary cross-entropy loss
 
 ### Results
 
 Development-set results for the best checkpoint:
 
-- Accuracy: 0.7365
-- Macro precision: 0.7371
-- Macro recall: 0.7372
-- Macro F1: 0.7365
-- MCC: 0.4743
-- ROC-AUC: 0.8180
-- Loss: 0.5193
+    - Accuracy: 0.7365
+    - Macro precision: 0.7371
+    - Macro recall: 0.7372
+    - Macro F1: 0.7365
+    - MCC: 0.4743
+    - ROC-AUC: 0.8180
+    - Loss: 0.5193
 
 Class-wise development performance:
 
-- **Label 0**
-  - Precision: 0.7144
-  - Recall: 0.7584
-  - F1: 0.7357
-
-- **Label 1**
-  - Precision: 0.7598
-  - Recall: 0.7159
-  - F1: 0.7372
+  - **Label 0**
+      - Precision: 0.7144
+      - Recall: 0.7584
+      - F1: 0.7357
+  
+  - **Label 1**
+      - Precision: 0.7598
+      - Recall: 0.7159
+      - F1: 0.7372
 
 Confusion matrix on the development set:
 
-- True negatives: 2471
-- False positives: 787
-- False negatives: 988
-- True positives: 2490
+    - True negatives: 2471
+    - False positives: 787
+    - False negatives: 988
+    - True positives: 2490
 
 ## Technical Specifications
 
 ### Hardware
-
-- CUDA-enabled GPU in Google Colab recommended for training
-- CPU execution is possible but slower
+    
+    - CUDA-enabled GPU in Google Colab recommended for training
+    - CPU execution is possible but slower
 
 ### Software
 
-- Python 3
-- PyTorch
-- pandas
-- numpy
-- scikit-learn
-- matplotlib
-- tqdm
-- gensim
+    - Python 3
+    - PyTorch
+    - pandas
+    - numpy
+    - scikit-learn
+    - matplotlib
+    - tqdm
+    - gensim
 
 ## Bias, Risks, and Limitations
 
