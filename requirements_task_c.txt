@@ -8,6 +8,9 @@ accelerate
 pandas
 numpy
 spacy
+tiktoken
+sentencepiece
+protobuf
 
 # Evaluation
 scikit-learn
