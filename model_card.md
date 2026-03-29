@@ -27,11 +27,11 @@ This model performs binary Natural Language Inference (NLI), predicting whether 
 
 This model is a non-transformer NLI classifier developed for the COMP34812 shared task (AY 2025–26), Track A: Natural Language Inference. It is based on an ESIM-style BiLSTM architecture with soft alignment, local inference matching, a second BiLSTM composition layer, gated pooling, and sentence-level interaction features. In the strongest final run, R-Drop regularization and SWA-style model averaging were enabled.
     
-    - Developed by: Mateusz Wojcieszyk
-    - Language(s): English
-    - Model type: Supervised binary text-pair classifier
-    - Model architecture: ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features
-    - Finetuned from model: Not applicable. The model was trained on the coursework dataset only, with pretrained static word embeddings used for initialization.
+- Developed by: Mateusz Wojcieszyk
+- Language(s): English
+- Model type: Supervised binary text-pair classifier
+- Model architecture: ESIM-style BiLSTM with soft alignment, local inference matching, second BiLSTM composition, gated pooling, and sentence-level interaction features
+- Finetuned from model: Not applicable. The model was trained on the coursework dataset only, with pretrained static word embeddings used for initialization.
 
 ### Model Resources
 
