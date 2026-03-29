@@ -1,0 +1,92 @@
+
+--- Training Optimized MoE: deberta ---
+Loading weights: 100%
+ 102/102 [00:00<00:00, 21000.34it/s]
+DebertaV2Model LOAD REPORT from: microsoft/deberta-v3-small
+Key                                     | Status     |  | 
+----------------------------------------+------------+--+-
+mask_predictions.classifier.bias        | UNEXPECTED |  | 
+lm_predictions.lm_head.LayerNorm.weight | UNEXPECTED |  | 
+lm_predictions.lm_head.bias             | UNEXPECTED |  | 
+lm_predictions.lm_head.LayerNorm.bias   | UNEXPECTED |  | 
+lm_predictions.lm_head.dense.bias       | UNEXPECTED |  | 
+mask_predictions.classifier.weight      | UNEXPECTED |  | 
+mask_predictions.LayerNorm.bias         | UNEXPECTED |  | 
+lm_predictions.lm_head.dense.weight     | UNEXPECTED |  | 
+mask_predictions.LayerNorm.weight       | UNEXPECTED |  | 
+mask_predictions.dense.bias             | UNEXPECTED |  | 
+mask_predictions.dense.weight           | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Map: 100%
+ 24442/24442 [03:02<00:00, 139.16 examples/s]
+Map: 100%
+ 6736/6736 [00:50<00:00, 135.20 examples/s]
+ [18336/18336 17:02, Epoch 12/12]
+Epoch	Training Loss	Validation Loss	Accuracy
+1	0.369384	0.312805	0.868468
+2	0.252839	0.406814	0.870101
+3	0.153447	0.542486	0.869804
+4	0.101840	0.606479	0.876188
+5	0.076488	0.664362	0.874406
+6	0.060897	0.891959	0.875742
+7	0.036851	0.911974	0.878118
+8	0.028527	0.945459	0.880344
+9	0.024317	1.038928	0.884056
+10	0.014709	1.142644	0.880641
+11	0.008208	1.157390	0.879602
+12	0.005344	1.172903	0.879751
+
+--- Training Optimized MoE: modernbert ---
+Loading weights: 100%
+ 134/134 [00:00<00:00, 1047.27it/s]
+ModernBertModel LOAD REPORT from: answerdotai/ModernBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+head.norm.weight  | UNEXPECTED |  | 
+decoder.bias      | UNEXPECTED |  | 
+head.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Map: 100%
+ 24442/24442 [03:11<00:00, 130.41 examples/s]
+Map: 100%
+ 6736/6736 [00:52<00:00, 124.02 examples/s]
+ [24448/24448 24:15, Epoch 8/8]
+Epoch	Training Loss	Validation Loss	Accuracy
+1	0.672724	0.666546	0.587144
+2	0.677536	0.666642	0.583135
+3	0.665438	0.666335	0.587886
+4	0.649388	0.639766	0.638658
+5	0.602251	0.620035	0.665083
+6	0.542847	0.627548	0.668795
+7	0.481788	0.808292	0.665825
+8	0.390193	0.936532	0.661817
+
+--- Final Optimized Ensemble Metrics ---
+Accuracy: 0.8841
+Macro F1: 0.8837
+
+
+total time = 49 minutes
+1. DeBERTa-v3-small
+
+    Preprocessing (Map): ~3 minutes 52 seconds (3:02 for train, 0:50 for dev).
+
+    Training Time: 17 minutes 02 seconds.
+
+    Epochs Completed: 12.
+
+    Time per Epoch: ~1 minute 25 seconds (1022 seconds/12).
+
+2. ModernBERT-base
+
+    Preprocessing (Map): ~4 minutes 03 seconds (3:11 for train, 0:52 for dev).
+
+    Training Time: 24 minutes 15 seconds.
+
+    Epochs Completed: 8.
+
+    Time per Epoch: ~3 minutes 02 seconds (1455 seconds/8).

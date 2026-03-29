@@ -1,0 +1,17 @@
+Backbone, LR, BatchSize, Epochs, Accuracy, F1
+deberta, 1e-05, 8, 2, 0.8597, 0.8594
+deberta, 1e-05, 8, 3, 0.8753, 0.8751
+deberta, 1e-05, 16, 2, 0.8621, 0.8619
+deberta, 1e-05, 16, 3, 0.8714, 0.8713
+deberta, 3e-05, 8, 2, 0.8722, 0.8720
+deberta, 3e-05, 8, 3, 0.8741, 0.8739
+deberta, 3e-05, 16, 2, 0.8725, 0.8723
+deberta, 3e-05, 16, 3, 0.8778, 0.8777
+modernbert, 1e-05, 8, 2, 0.8747, 0.8745
+modernbert, 1e-05, 8, 3, 0.8763, 0.8762
+modernbert, 1e-05, 16, 2, 0.8670, 0.8667
+modernbert, 1e-05, 16, 3, 0.8738, 0.8737
+modernbert, 3e-05, 8, 2, 0.8907, 0.8905
+modernbert, 3e-05, 8, 3, 0.8888, 0.8886
+modernbert, 3e-05, 16, 2, 0.8838, 0.8836
+modernbert, 3e-05, 16, 3, 0.7130, 0.7130
