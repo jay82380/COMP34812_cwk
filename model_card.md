@@ -187,13 +187,13 @@ Confusion matrix on the development set:
 ## Bias, Risks, and Limitations
 
 <!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-- This model was trained only on the coursework dataset, so performance may not generalise to other domains or genres.
-- The shared task was run in closed mode, so no external labelled NLI or claim-verification datasets were used.
-- Static pretrained embeddings may encode biases from their source corpora.
-- Although the model uses attention-based alignment, it remains a non-transformer recurrent architecture and may struggle with long-range dependencies or examples requiring substantial background knowledge.
-- Threshold tuning was performed on the development set and may not transfer perfectly to the hidden test set.
-- This model is intended for coursework evaluation rather than real-world deployment.
+    
+    - This model was trained only on the coursework dataset, so performance may not generalise to other domains or genres.
+    - The shared task was run in closed mode, so no external labelled NLI or claim-verification datasets were used.
+    - Static pretrained embeddings may encode biases from their source corpora.
+    - Although the model uses attention-based alignment, it remains a non-transformer recurrent architecture and may struggle with long-range dependencies or examples requiring substantial background knowledge.
+    - Threshold tuning was performed on the development set and may not transfer perfectly to the hidden test set.
+    - This model is intended for coursework evaluation rather than real-world deployment.
 
 ## Additional Information
 
