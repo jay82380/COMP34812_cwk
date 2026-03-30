@@ -108,6 +108,7 @@ Evaluation was performed on the provided development dataset (approximately 6,70
 - F1-score  
 - Accuracy  
 - MCC Score
+- Confusion matrix
 
 ### Results
 
