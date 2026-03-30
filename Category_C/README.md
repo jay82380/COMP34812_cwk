@@ -26,11 +26,11 @@ The model combines:
 
 ## Trained Model
 
-The trained model bundle (`nli_esim_plus_bundle.pt`) is stored on OneDrive:
+The trained model folder (`nli_ensemble_model`) is stored on Google Drive:
 
-[nli_esim_plus_bundle.pt](https://livemanchesterac-my.sharepoint.com/:u:/g/personal/mateusz_wojcieszyk_student_manchester_ac_uk/IQC51O_qiy0yTbi9D-YCIxYLAWy7S7AykQ726iLX15iScfg)
+[nli_ensemble_model](https://drive.google.com/drive/folders/1GZjxZhAQlmt_gHUcXogkVgeAWWNPcOqL?usp=sharing)
 
-The bundle contains model weights, vocabulary, configuration, decision threshold, and training metadata. It is loaded by both the evaluation and demo notebooks.
+The folder contains model weights, vocabulary, configuration, decision threshold, and training metadata. It is loaded by both the evaluation and demo notebooks.
 
 ## Data Sources
 

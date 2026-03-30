@@ -63,22 +63,34 @@ To improve robustness, additional synthetic training examples were generated usi
 ### Training Procedure
 
 #### Training Hyperparameters
+- Data Augmentation Model: T5
+- Data Augmentation Implementation: t5-base
+- Data Augmentation Sample Size: 1000
+- Data Augmentation Generation Size: 64
 
-- DeBERTa learning rate: 3e-05  
-- DeBERTa batch size: 16  
-- DeBERTa epochs: 12  
+- DeBERTa Implementation: deberta-v3-small
+- DeBERTa Learning Rate: 3e-05  
+- DeBERTa Batch Size: 16  
+- DeBERTa Epochs: 12  
+- DeBERTa Max Sequence Length: 128
 
-- ModernBERT learning rate: 3e-05  
-- ModernBERT batch size: 8  
-- ModernBERT epochs: 8  
+- ModernBERT Implementation: ModernBERT-base
+- ModernBERT Learning Rate: 3e-05  
+- ModernBERT Batch Size: 8  
+- ModernBERT Epochs: 8  
+- ModernBERT Max Sequence Length: 128
 
-- Max sequence length: 128  
+- MoE Expert Count: 4
+- MoE Gating Layer Size: 128
+- MoE Gating Activation Function: ReLU
+- MoE Activation Function: tanh
+- MoE Normalisation: LayerNorm
 
 #### Speeds, Sizes, Times
 
-- Total training time: ~40 minutes  
-- Duration per epoch (DeBERTa): ~1.5 minutes  
-- Duration per epoch (ModernBERT): ~3 minutes  
+- Total training time: ~91 minutes  
+- Duration per epoch (DeBERTa): ~3.6 minutes  
+- Duration per epoch (ModernBERT): ~7.7 minutes  
 - Model size: ~550MB (DeBERTa), ~575MB (ModernBERT)  
 
 ## Evaluation
@@ -101,16 +113,16 @@ Evaluation was performed on the provided development dataset (approximately 6,70
 Performance on the development set:
 
 **DeBERTa-v3**
-- Accuracy: 0.87  
+- Accuracy: 0.88  
 - F1-score: 0.87  
 
 **ModernBERT**
-- Accuracy: 0.68  
+- Accuracy: 0.88  
 - F1-score: 0.88  
 
 **Ensemble (DeBERTa + ModernBERT)**
-- Accuracy: 0.88  
-- F1-score: 0.88  
+- Accuracy: 0.90
+- F1-score: 0.90 
 
 The ensemble improves overall performance, demonstrating complementary strengths between the two backbone models.
 
@@ -118,11 +130,15 @@ The ensemble improves overall performance, demonstrating complementary strengths
 
 ### Hardware
 
-The model was trained on the following hardware (not necessarily the minimum requirement for inference):
+The model was trained on the following hardware:
+- RAM: 32GB  
+- GPU: RTX 4080
+- CPU: i9-13900
 
-- RAM: ≥ 8GB  
-- Storage: ≥ 2GB  
-- GPU: Optional (recommended for training)  
+Inference Recommended Specs (based on Google Colab run):
+- RAM: 12GB
+- GPU: NVIDIA T4
+- CPU: Intel Xeon
 
 ### Software
 
