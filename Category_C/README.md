@@ -35,6 +35,7 @@ The folder contains model weights, vocabulary, configuration, decision threshold
 ## Data Sources
 
 - **Training and development data:** Coursework-provided `train.csv` and `dev.csv` splits for the NLI track. No external labelled or unlabelled task datasets were used.
+- Through the use of the generative T5 model, we also created synthetic training examples based on a sampled subset of the existing dataset.
 
 ## Code and Architecture Attribution
 

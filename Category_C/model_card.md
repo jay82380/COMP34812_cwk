@@ -7,7 +7,7 @@ tags:
 - text-classification
 - ensemble
 - mixture-of-experts
-repo: https://github.com/jay82380/COMP34812_cwk/tree/category_C
+repo: https://github.com/jay82380/COMP34812_cwk/tree/submission/Category_C
 ---
 
 # Model Card for group-13-devberta-NLI
@@ -107,6 +107,7 @@ Evaluation was performed on the provided development dataset (approximately 6,70
 - Recall  
 - F1-score  
 - Accuracy  
+- MCC Score
 
 ### Results
 
